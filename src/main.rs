@@ -1,10 +1,15 @@
-mod nn;
+mod matrix;
+mod network;
 
-use nn::Matrix;
+use matrix::*;
+use network::*;
+
 
 fn main() {
-    let zeros = Matrix::zeros(3, 2);
-    let random = Matrix::random(3, 2);
-    println!("Zeros matrix{:?}", zeros);
-    println!("Random matrx: {:?}", random);
+    let a = Matrix::random(3, 3);
+
+    a.print()
+
+
+
 }
