@@ -1,15 +1,8 @@
 mod matrix;
 mod network;
 
-use matrix::*;
 use network::*;
 
-
 fn main() {
-    let a = Matrix::random(3, 3);
-
-    a.print()
-
-
-
+    let nn = Network::new(vec![2, 3, 1]);
 }

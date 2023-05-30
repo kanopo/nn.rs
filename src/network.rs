@@ -2,36 +2,27 @@
 
 use crate::matrix::*;
 
-// pub struct Neuron {
-//     inputs: Vec<f64>,
-//     weights: Vec<f64>,
-//     bias: f64,
-//     activation: fn(f64) -> f64,
-// }
-//
-// impl Neuron {
-//     pub fn new(inputs: Vec<f64>, weights: Vec<f64>, bias: f64) -> Neuron {
-//         Neuron {
-//             inputs,
-//             weights,
-//             bias,
-//             activation: |x| x * 2.0,
-//         }
-//     }
-//
-//     pub fn feedforward(&self) -> f64 {
-//         let mut total = 0.0;
-//         for i in 0..self.inputs.len() {
-//             total += self.inputs[i] * self.weights[i];
-//         }
-//         total + self.bias
-//     }
-// }
+pub struct Network {
+    pub layers: Vec<usize>,
+    pub weights: Vec<Matrix>,
+    pub biases: Vec<Matrix>,
+    pub activations: Vec<Matrix>,
+}
 
-pub struct Layer {
-    inputs: Vec<Matrix>,
-    biases: Vec<Matrix>,
-    weights: Vec<Matrix>,
-    activation: fn(f64) -> f64,
-    output: Vec<Matrix>,
+impl Network {
+    pub fn new(layers: Vec<usize>) -> Network {
+        assert!(layers.first() > Some(&0));
+        assert!(layers.last() > Some(&0));
+
+        let mut weights = Vec::new();
+        let mut biases = Vec::new();
+        let mut activations = Vec::new();
+
+        Network {
+            layers,
+            weights,
+            biases,
+            activations,
+        }
+    }
 }
