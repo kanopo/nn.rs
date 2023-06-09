@@ -1,5 +1,4 @@
-#![allow(dead_code)]
-#[derive(Debug)]
+#[derive(Clone)]
 pub struct Matrix {
     pub rows: usize,
     pub cols: usize,
@@ -7,7 +6,7 @@ pub struct Matrix {
 }
 
 impl Matrix {
-    pub fn zeros(rows: usize, cols: usize) -> Matrix {
+    pub fn new(rows: usize, cols: usize) -> Matrix {
         Matrix {
             rows,
             cols,
@@ -15,81 +14,39 @@ impl Matrix {
         }
     }
 
-    pub fn random(rows: usize, cols: usize) -> Matrix {
-        Matrix {
-            rows,
-            cols,
-            data: (0..rows)
-                .map(|_| (0..cols).map(|_| rand::random::<f64>()).collect())
-                .collect(),
-        }
-    }
-
-    pub fn of(rows: usize, cols: usize, of: f64) -> Matrix {
-        Matrix {
-            rows,
-            cols,
-            data: vec![vec![of; cols]; rows],
-        }
-    }
-
-    pub fn from_array(arr: Vec<Vec<f64>>) -> Matrix {
-        let rows = arr.len();
-        let cols = arr[0].len();
-        Matrix {
-            rows,
-            cols,
-            data: arr,
-        }
-    }
-
-    pub fn to_array(&self) -> Vec<Vec<f64>> {
-        self.data.clone()
-    }
-
-    pub fn print(&self) {
-        for i in 0..self.rows {
-            for j in 0..self.cols {
-                print!("{}\t", self.data[i][j]);
+    pub fn rand(&mut self) {
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+                self.data[row][col] = rand::random::<f64>();
             }
-            println!("")
         }
     }
 }
 
-pub fn matrix_moltiplication(a: Matrix, b: Matrix) -> Matrix {
+pub fn matrix_multiply(a: &Matrix, b: &Matrix) -> Matrix {
     assert_eq!(a.cols, b.rows);
-
-    let mut result = Matrix::zeros(a.rows, b.cols);
-
-    // source: https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm
-
-    // matrix A is m x n
-    // matrix B is n x p
-    // matrix C is m x p
-
-    for i in 0..a.rows {
-        for j in 0..b.cols {
+    let mut result = Matrix::new(a.rows, b.cols);
+    for row in 0..result.rows {
+        for col in 0..result.cols {
             let mut sum = 0.0;
-            for k in 0..a.cols {
-                sum += a.data[i][k] * b.data[k][j];
+            for i in 0..a.cols {
+                sum += a.data[row][i] * b.data[i][col];
             }
-
-            result.data[i][j] = sum;
+            result.data[row][col] = sum;
         }
     }
     result
 }
 
-pub fn matrix_addition(a: Matrix, b: Matrix) -> Matrix {
-    assert_eq!(a.rows, b.rows);
-    assert_eq!(a.cols, b.cols);
-    let mut result = Matrix::zeros(a.rows, a.cols);
-    for i in 0..a.rows {
-        for j in 0..a.cols {
-            result.data[i][j] = a.data[i][j] + b.data[i][j];
+impl std::fmt::Display for Matrix {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let mut s = String::new();
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+                s.push_str(&format!("{:.2} ", self.data[row][col]));
+            }
+            s.push_str("\n");
         }
+        write!(f, "{}", s)
     }
-    result
 }
-
